@@ -9,16 +9,16 @@ from .serializers import (
 )
 from .permissions import OwnershipPermission
 
-
+# Определение разрешения для дочерних классов
 class PermissionViewset(viewsets.ModelViewSet):
     permission_classes = (OwnershipPermission,)
 
-
+# Уставление разрешения на только чтение для групп, установка сериализатора.
 class GroupViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
 
-
+# Реализация CRUD запросов для постов, а также их пагинация, сериализация. 
 class PostViewSet(PermissionViewset):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
@@ -29,7 +29,8 @@ class PostViewSet(PermissionViewset):
             author=self.request.user
         )
 
-
+# Реализация логики создания, чтения, редактирования и удаления комментариев,
+# определенного поста.
 class CommentViewSet(PermissionViewset):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
@@ -49,7 +50,7 @@ class CommentViewSet(PermissionViewset):
             post=self.get_post_obj()
         )
 
-
+# Класс реализующийся для создания и просмотра подписок
 class FollowViewSet(
     viewsets.GenericViewSet,
     mixins.CreateModelMixin,
